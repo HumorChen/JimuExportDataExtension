@@ -1,0 +1,8 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=cn.humorchen.jimu.export.aspect.DownloadTaskAspect,\
+  cn.humorchen.jimu.export.config.AsyncConfig,\
+  cn.humorchen.jimu.export.config.JimuReportTokenService,\
+  cn.humorchen.jimu.export.controller.DownloadCenterController,\
+  cn.humorchen.jimu.export.event.handler.DownloadTaskPublishEventHandler,\
+  cn.humorchen.jimu.export.service.impl.DownloadTaskServiceImpl,\
+  cn.humorchen.jimu.export.service.impl.ReportDataGetServiceImpl,\
+  cn.humorchen.jimu.export.config.MapperScanConfiguration
