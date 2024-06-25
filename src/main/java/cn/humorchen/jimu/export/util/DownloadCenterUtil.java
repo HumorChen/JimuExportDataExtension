@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLEncoder;
 
 /**
  * @author humorchen
@@ -113,9 +114,20 @@ public class DownloadCenterUtil {
             sb.append("?");
         }
         for (String key : params.keySet()) {
-            sb.append(key).append("=").append(params.getString(key)).append("&");
+            String value = params.getString(key);
+            try {
+                value = URLEncoder.encode(value, "utf8");
+            } catch (Exception e) {
+                log.error("getUrlWithParams URL编码报错", e);
+            }
+            sb.append(key).append("=").append(value).append("&");
         }
         return sb.substring(0, sb.length() - 1);
     }
 
+    public static void main(String[] args) {
+        System.out.println(getUrlWithParams("http://www.baidu.com", JSONObject.parseObject("{\"a\":\"1\",\"b\":\"2xas\"}")));
+        System.out.println(getUrlWithParams("http://www.baidu.com", JSONObject.parseObject("{\"a\":\"1\",\"b\":\"2sx%\"}")));
+
+    }
 }

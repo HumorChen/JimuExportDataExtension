@@ -60,7 +60,7 @@ public class DownloadTaskServiceImpl extends ServiceImpl<DownloadTaskMapper, Dow
     @Autowired
     private ApplicationEventPublisher eventPublisher;
     @Autowired
-    private IJimuExportExtensionNeedImplMethodService jimuExportDataUserService;
+    private IJimuExportExtensionNeedImplMethodService jimuExportExtensionNeedImplMethodService;
 
     /**
      * 注册任务
@@ -87,7 +87,7 @@ public class DownloadTaskServiceImpl extends ServiceImpl<DownloadTaskMapper, Dow
             return true;
         }
         DownloadTaskSubmitLimitCacheKey limitCacheKey = new DownloadTaskSubmitLimitCacheKey(account, MD5.create().digestHex(requestBody));
-        int expire = Optional.ofNullable(jimuExportDataUserService.getSubmitLimitSec()).orElse(limitCacheKey.getExpire());
+        int expire = Optional.ofNullable(jimuExportExtensionNeedImplMethodService.getSubmitLimitSec()).orElse(limitCacheKey.getExpire());
         Boolean setIfAbsent = redisTemplate.opsForValue().setIfAbsent(limitCacheKey.getKey(), DateUtil.now(), expire, limitCacheKey.getTimeUnit());
         return Boolean.TRUE.equals(setIfAbsent);
     }
@@ -175,7 +175,7 @@ public class DownloadTaskServiceImpl extends ServiceImpl<DownloadTaskMapper, Dow
         String endTime = pageListDownloadTaskDto.getEndTime();
         String fileName = pageListDownloadTaskDto.getFileName();
         Integer taskState = pageListDownloadTaskDto.getTaskState();
-        String account = jimuExportDataUserService.getAccount();
+        String account = jimuExportExtensionNeedImplMethodService.getAccount();
         int pageNo = Optional.ofNullable(pageListDownloadTaskDto.getPageNo()).orElse(1);
         int pageSize = Optional.ofNullable(pageListDownloadTaskDto.getPageSize()).orElse(10);
 
@@ -332,5 +332,13 @@ public class DownloadTaskServiceImpl extends ServiceImpl<DownloadTaskMapper, Dow
         return "{}";
     }
 
-
+    /**
+     * 获取扩展的service
+     *
+     * @return
+     */
+    @Override
+    public IJimuExportExtensionNeedImplMethodService getJimuExportExtensionNeedImplMethodService() {
+        return jimuExportExtensionNeedImplMethodService;
+    }
 }

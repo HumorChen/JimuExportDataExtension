@@ -4,6 +4,7 @@ import cn.humorchen.jimu.export.dto.JimuPageDto;
 import cn.humorchen.jimu.export.dto.JimuReportDataColumnDTO;
 import cn.humorchen.jimu.export.dto.JimuReportDataSourceDTO;
 import cn.humorchen.jimu.export.service.IDownloadTaskService;
+import cn.humorchen.jimu.export.service.IJimuExportExtensionNeedImplMethodService;
 import cn.humorchen.jimu.export.util.DownloadCenterUtil;
 import cn.humorchen.jimu.export.util.DynamicColumnEasyExcelUtil;
 import cn.hutool.core.util.StrUtil;
@@ -95,14 +96,16 @@ public class JimuReportDynamicEasyExcelImpl implements DynamicColumnEasyExcelUti
                 // 调用API获取数据
                 HttpRequest post = HttpRequest.post(url);
                 DownloadCenterUtil.setDownloadCenterHeaderRequest(post);
-                post.header("token", requestToken);
+                IJimuExportExtensionNeedImplMethodService jimuExportExtensionNeedImplMethodService = downloadTaskService.getJimuExportExtensionNeedImplMethodService();
+                String tokenHeaderName = jimuExportExtensionNeedImplMethodService != null ? jimuExportExtensionNeedImplMethodService.getTokenHeaderName() : "token";
+                post.header(tokenHeaderName, requestToken);
                 post.body(finalRequestParam);
                 post.setConnectionTimeout(TIMEOUT_MILLS);
                 post.setReadTimeout(TIMEOUT_MILLS);
                 // 发起请求
                 HttpResponse httpResponse = post.execute();
                 String body = httpResponse.body();
-                log.info("【下载中心】 apiUrl:{} 请求url：{} 请求body:{} ", apiUrl, url, finalRequestParam);
+                log.info("【下载中心】 apiUrl:{} 请求实际url：{} 请求body:{} 请求结果响应码：{} 请求结果：{}", apiUrl, url, finalRequestParam, httpResponse.getStatus(), (StrUtil.isNotBlank(body) && body.length() < 500 ? body : "响应过长，不打印"));
                 JSONObject jsonObject = JSONObject.parseObject(body);
                 jimuPageDto.setData(jsonObject.getJSONArray(JimuPageDto.Fields.data).toJavaList(JSONObject.class));
                 jimuPageDto.setCount(jsonObject.getLongValue(JimuPageDto.Fields.count));

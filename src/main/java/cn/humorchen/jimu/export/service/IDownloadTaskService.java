@@ -135,4 +135,11 @@ public interface IDownloadTaskService extends IService<DownloadTask> {
      * @return
      */
     String getRequestParamFromJson(String json);
+
+    /**
+     * 获取扩展的service
+     *
+     * @return
+     */
+    IJimuExportExtensionNeedImplMethodService getJimuExportExtensionNeedImplMethodService();
 }
