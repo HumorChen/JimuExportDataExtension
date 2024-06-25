@@ -16,6 +16,7 @@
 
 在项目中实现 IJimuExportExtensionNeedImplMethodService
 接口中其他方法根据实际情况覆盖实现，无特殊要求则可不覆盖。
+若区分账户，每个账户只能看到自己的导出记录，则将token相关方法实现
 
 ### 报表导出接口加注解、参数
 
